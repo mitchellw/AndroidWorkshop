@@ -4,5 +4,7 @@
     <string name="app_name">Android Workshop</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="longitude_placeholder">Longitude</string>
+    <string name="latitude_placeholder">Latitude</string>
 
 </resources>
