@@ -31,4 +31,12 @@ public class Message {
     public long getTimePostedMills() {
         return timePostedMills;
     }
+
+    public void incrementScore() {
+        score++;
+    }
+
+    public void decrementScore() {
+        score--;
+    }
 }
