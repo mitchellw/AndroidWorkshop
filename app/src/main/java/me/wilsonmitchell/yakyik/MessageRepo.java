@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public class MessageRepo {
 
-    public List<Message> getNearbyMessages(Location location) {
+    public static List<Message> getNearbyMessages(Location location) {
         List<Message> testList = new ArrayList<Message>();
         // Add messages with authors
         for (int i = 0; i < 5; i++) {
@@ -30,7 +30,7 @@ public class MessageRepo {
         return testList;
     }
 
-    public boolean postMessage(Message message, Location location) {
+    public static boolean postMessage(Message message, Location location) {
         return true;
     }
 }
