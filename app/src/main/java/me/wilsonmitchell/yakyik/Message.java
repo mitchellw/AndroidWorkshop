@@ -8,12 +8,14 @@ public class Message {
     private String message;
     private int score;
     private long timePostedMills;
+    private String id;
 
-    public Message(String author, String message, int score, long timePostedMills) {
+    public Message(String author, String message, int score, long timePostedMills, String id) {
         this.author = author;
         this.message = message;
         this.score = score;
         this.timePostedMills = timePostedMills;
+        this.id = id;
     }
 
     public String getAuthor() {
@@ -38,5 +40,9 @@ public class Message {
 
     public void decrementScore() {
         score--;
+    }
+
+    public String getId() {
+        return id;
     }
 }
