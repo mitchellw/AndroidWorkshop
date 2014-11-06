@@ -13,7 +13,7 @@ application.debug=True
 
 # Get MongoDB client
 mongo = PyMongo(application)
-#mongo.db.collection.ensureIndex( { 'location' : '2dsphere' } )
+#mongo.db.messages.ensureIndex( { 'location' : '2dsphere' } )
 
 @application.route('/messages', methods=['GET'])
 def get_messages():
