@@ -9,5 +9,9 @@
     <string name="default_score">0</string>
     <string name="downvote_label">Downvote</string>
     <string name="default_posted_time">Posted now</string>
+    <string name="title_activity_post_message">Post a New Message</string>
+    <string name="message_hint">Type your message here</string>
+    <string name="author_hint">(Optional) Name</string>
+    <string name="submit_label">Submit</string>
 
 </resources>
