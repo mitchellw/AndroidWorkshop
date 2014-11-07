@@ -1,6 +1,7 @@
 package me.wilsonmitchell.yakyik;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -8,6 +9,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 
@@ -57,6 +59,32 @@ public class NearbyMessagesActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
         locationManager.removeUpdates(locationListener);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.nearby_messages, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_post_message:
+                Intent postMessageIntent = new Intent(this, PostMessageActivity.class);
+                this.startActivity(postMessageIntent);
+                return true;
+            case R.id.action_refresh:
+                if (lastKnownLocation != null) {
+                    new DownloadMessagesTask().execute();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class DownloadMessagesTask extends AsyncTask<Void, Void, List<Message>> {

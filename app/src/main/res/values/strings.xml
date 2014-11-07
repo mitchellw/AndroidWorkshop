@@ -12,6 +12,11 @@
     <string name="title_activity_post_message">Post a New Message</string>
     <string name="message_hint">Type your message here</string>
     <string name="author_hint">(Optional) Name</string>
-    <string name="submit_label">Submit</string>
+    <string name="submit_label">Post</string>
+    <string name="post_fail_message">Failed to post your message. Please try again!</string>
+    <string name="location_not_found_message">Still waiting on your location. Please try again!</string>
+    <string name="action_post_message">Post Message</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="message_required_message">Please enter a message!</string>
 
 </resources>

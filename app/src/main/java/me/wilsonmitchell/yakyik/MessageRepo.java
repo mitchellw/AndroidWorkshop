@@ -3,18 +3,27 @@ package me.wilsonmitchell.yakyik;
 import android.location.Location;
 import android.util.Log;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -71,7 +80,39 @@ public class MessageRepo {
         return messageList;
     }
 
-    public static boolean postMessage(Message message, Location location) {
+    public static boolean postMessage(String messageText, String author, Location location) {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpHost httpHost = new HttpHost(ENDPOINT, PORT);
+        HttpPost httpRequest = new HttpPost(MESSAGES_ENDPOINT);
+
+        List<NameValuePair> formParameters = new ArrayList<NameValuePair>();
+        formParameters.add(new BasicNameValuePair("message", messageText));
+        formParameters.add(new BasicNameValuePair("longitude", String.valueOf(location.getLongitude())));
+        formParameters.add(new BasicNameValuePair("latitude", String.valueOf(location.getLatitude())));
+        if (author != null && author.length() > 0) {
+            formParameters.add(new BasicNameValuePair("author", author));
+        }
+
+        try {
+            httpRequest.setEntity(new UrlEncodedFormEntity(formParameters));
+        }
+        catch (UnsupportedEncodingException e) {
+            return false;
+        }
+
+
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpHost, httpRequest);
+        }
+        catch (Exception e) {
+            return false;
+        }
+
+        if (httpResponse.getStatusLine().getStatusCode() != 200) {
+            return false;
+        }
+
         return true;
     }
 }
