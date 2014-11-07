@@ -115,4 +115,66 @@ public class MessageRepo {
 
         return true;
     }
+
+    public static boolean upvoteMessage(Message message) {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpHost httpHost = new HttpHost(ENDPOINT, PORT);
+        HttpPost httpRequest = new HttpPost(UPVOTE_ENDPOINT);
+
+        List<NameValuePair> formParameters = new ArrayList<NameValuePair>();
+        formParameters.add(new BasicNameValuePair("message_id", message.getId()));
+
+        try {
+            httpRequest.setEntity(new UrlEncodedFormEntity(formParameters));
+        }
+        catch (UnsupportedEncodingException e) {
+            return false;
+        }
+
+
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpHost, httpRequest);
+        }
+        catch (Exception e) {
+            return false;
+        }
+
+        if (httpResponse.getStatusLine().getStatusCode() != 200) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean downvoteMessage(Message message) {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpHost httpHost = new HttpHost(ENDPOINT, PORT);
+        HttpPost httpRequest = new HttpPost(DOWNVOTE_ENDPOINT);
+
+        List<NameValuePair> formParameters = new ArrayList<NameValuePair>();
+        formParameters.add(new BasicNameValuePair("message_id", message.getId()));
+
+        try {
+            httpRequest.setEntity(new UrlEncodedFormEntity(formParameters));
+        }
+        catch (UnsupportedEncodingException e) {
+            return false;
+        }
+
+
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpHost, httpRequest);
+        }
+        catch (Exception e) {
+            return false;
+        }
+
+        if (httpResponse.getStatusLine().getStatusCode() != 200) {
+            return false;
+        }
+
+        return true;
+    }
 }

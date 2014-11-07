@@ -18,5 +18,6 @@
     <string name="action_post_message">Post Message</string>
     <string name="action_refresh">Refresh</string>
     <string name="message_required_message">Please enter a message!</string>
+    <string name="vote_fail_message">Failed to vote on that message. Please try again!</string>
 
 </resources>

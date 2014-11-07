@@ -1,6 +1,7 @@
 package me.wilsonmitchell.yakyik;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -43,6 +45,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             public void onClick(View view) {
                 message.incrementScore();
                 holder.scoreTextView.setText(String.valueOf(message.getScore()));
+
+                new UpvoteMessageTask().execute(message);
             }
         });
         holder.downvoteButton.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +54,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             public void onClick(View view) {
                 message.decrementScore();
                 holder.scoreTextView.setText(String.valueOf(message.getScore()));
+
+                new DownvoteMessageTask().execute(message);
             }
         });
         return holder.rootView;
@@ -83,6 +89,48 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             Button upvoteButton = (Button)rootView.findViewById(R.id.upvoteButton);
             Button downvoteButton = (Button)rootView.findViewById(R.id.downvoteButton);
             return new MessageViewHolder(rootView, authorTextView, messageTextView, scoreTextView, timePostedTextView, upvoteButton, downvoteButton);
+        }
+    }
+
+    private class UpvoteMessageTask extends AsyncTask<Message, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Message... messages) {
+            if (messages.length != 1) {
+                return false;
+            }
+            Message message = messages[0];
+
+            return MessageRepo.upvoteMessage(message);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+
+            if (!success) {
+                Toast.makeText(MessageAdapter.this.getContext(), R.string.vote_fail_message, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private class DownvoteMessageTask extends AsyncTask<Message, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Message... messages) {
+            if (messages.length != 1) {
+                return false;
+            }
+            Message message = messages[0];
+
+            return MessageRepo.downvoteMessage(message);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+
+            if (!success) {
+                Toast.makeText(MessageAdapter.this.getContext(), R.string.vote_fail_message, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
