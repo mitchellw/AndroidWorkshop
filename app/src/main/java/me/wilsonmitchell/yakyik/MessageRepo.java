@@ -1,6 +1,7 @@
 package me.wilsonmitchell.yakyik;
 
 import android.location.Location;
+import android.util.Log;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -31,14 +32,10 @@ public class MessageRepo {
 
     public static List<Message> getNearbyMessages(Location location) {
         HttpClient httpClient = new DefaultHttpClient();
-        HttpHost httpHost = new HttpHost(MESSAGES_ENDPOINT, PORT);
-        HttpRequest messageRequest = new HttpGet(MESSAGES_ENDPOINT);
-
-        HttpParams httpParams = new BasicHttpParams();
-        httpParams.setParameter("longitude", location.getLongitude());
-        httpParams.setParameter("latitude", location.getLatitude());
-
-        messageRequest.setParams(httpParams);
+        HttpHost httpHost = new HttpHost(ENDPOINT, PORT);
+        HttpRequest messageRequest = new HttpGet(MESSAGES_ENDPOINT
+                + "?longitude=" + location.getLongitude()
+                + "&latitude=" + location.getLatitude());
 
         HttpResponse httpResponse;
         InputStream is;
@@ -50,19 +47,25 @@ public class MessageRepo {
             return new ArrayList<Message>();
         }
 
+        if (httpResponse.getStatusLine().getStatusCode() != 200) {
+            return new ArrayList<Message>();
+        }
+
         List<Message> messageList = new ArrayList<Message>();
         JSONObject messagesJson = ServerUtils.fromInputStream(is);
         JSONArray messageArray = messagesJson.optJSONArray("messages");
-        for (int i = 0; i < messageArray.length(); i++) {
-            JSONObject messageObj = messageArray.optJSONObject(i);
-            String messageText = messageObj.optString("message", "");
-            long timePosted = messageObj.optLong("time_posted", System.currentTimeMillis());
-            int score = messageObj.optInt("score", 0);
-            String author = messageObj.optString("author", "");
-            String id = messageObj.optJSONObject("_id").optString("$oid", "");
+        if (messageArray != null) {
+            for (int i = 0; i < messageArray.length(); i++) {
+                JSONObject messageObj = messageArray.optJSONObject(i);
+                String messageText = messageObj.optString("message", "");
+                long timePosted = messageObj.optLong("time_posted", System.currentTimeMillis());
+                int score = messageObj.optInt("score", 0);
+                String author = messageObj.optString("author", "");
+                String id = messageObj.optJSONObject("_id").optString("$oid", "");
 
-            Message message = new Message(author, messageText, score, timePosted, id);
-            messageList.add(message);
+                Message message = new Message(author, messageText, score, timePosted, id);
+                messageList.add(message);
+            }
         }
 
         return messageList;
