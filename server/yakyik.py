@@ -51,7 +51,7 @@ def post_message():
   if not message or not longitude or not latitude:
     return 'required elements not present', 400
 
-  author = request.form.get('author', None)
+  author = request.form.get('author', '')
   timestamp = int(time.time() * 1000)
 
   new_message = {
